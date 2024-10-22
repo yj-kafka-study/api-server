@@ -14,12 +14,17 @@ import java.time.LocalDateTime;
 @RequestMapping("/api/v1/file")
 @RequiredArgsConstructor
 public class FileController {
-    private final KafkaProducer kafkaProducer;
+    private final CustomKafkaProducer customKafkaProducer;
+    int a = 0;
 
     @GetMapping("/{fileUuid}")
     public FileGetResponse  getFile(@PathVariable String fileUuid) {
         log.info("Call api at {}", LocalDateTime.now());
-        kafkaProducer.create();
+
+        FileMeta fileMeta = new FileMeta(1L, "fileName", "fileType", "fileSize", "filePath", "fileHash");
+        for(int i=0; i<5; i++){
+            customKafkaProducer.create("testString" + a++);
+        }
         return new FileGetResponse("test_filename.png", fileUuid, "test_download_url");
     }
 }
